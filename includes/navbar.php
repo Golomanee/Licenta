@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <nav class="top-navbar">
     <div class="navbar-right">
-        <?php if (!isset($_SESSION['user']) || $_SESSION['user']['type'] !== 'doctor'): ?>
+        <?php if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'doctor'): ?>
             <a href="#">Programează-te</a>
         <?php endif; ?>
         <?php if (isset($_SESSION['user'])): ?>

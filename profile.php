@@ -11,13 +11,21 @@ if (!isset($_SESSION['user'])) {
 $user = $_SESSION['user'];
 $userId = $user['id'];
 
-// Fetch full user details from database
-$stmt = $conn->prepare("SELECT * FROM user WHERE id = ?");
+// Fetch full user details from database (join User and UserDetails tables)
+$stmt = $conn->prepare("SELECT u.*, ud.name, ud.birthday, ud.phone, ud.country, ud.city, ud.height, ud.weight, ud.profileimage FROM User u LEFT JOIN UserDetails ud ON u.id = ud.userid WHERE u.id = ?");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
 $userDetails = $result->fetch_assoc();
 $stmt->close();
+
+// Calculate age from birthday
+$age = null;
+if ($userDetails['birthday']) {
+    $birthDate = new DateTime($userDetails['birthday']);
+    $today = new DateTime();
+    $age = $today->diff($birthDate)->y;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,24 +48,58 @@ $stmt->close();
                 </div>
                 <div class="profile-info">
                     <h2><?php echo htmlspecialchars($userDetails['name']); ?></h2>
-                    <p class="user-type"><?php echo htmlspecialchars(ucfirst($userDetails['type'])); ?></p>
+                    <p class="user-type"><?php echo htmlspecialchars(ucfirst($userDetails['role'])); ?></p>
                 </div>
             </div>
             
             <div class="profile-details">
-                <div class="detail-row">
-                    <span class="detail-label">Nume:</span>
-                    <span class="detail-value"><?php echo htmlspecialchars($userDetails['name']); ?></span>
+                <div class="details-section">
+                    <h3 class="section-title">Informații personale</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value"><?php echo htmlspecialchars($userDetails['email']); ?></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Data nașterii:</span>
+                        <span class="detail-value"><?php echo $userDetails['birthday'] ? htmlspecialchars(date('d.m.Y', strtotime($userDetails['birthday']))) : 'Nu este setată'; ?></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Vârstă:</span>
+                        <span class="detail-value"><?php echo $age ? $age . ' ani' : 'Nu este setată'; ?></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Telefon:</span>
+                        <span class="detail-value"><?php echo htmlspecialchars($userDetails['phone'] ?? 'Nu este setat'); ?></span>
+                    </div>
                 </div>
                 
-                <div class="detail-row">
-                    <span class="detail-label">Tip utilizator:</span>
-                    <span class="detail-value"><?php echo htmlspecialchars(ucfirst($userDetails['type'])); ?></span>
+                <div class="details-section">
+                    <h3 class="section-title">Locație</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Țară:</span>
+                        <span class="detail-value"><?php echo htmlspecialchars($userDetails['country'] ?? 'Nu este setată'); ?></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Oraș:</span>
+                        <span class="detail-value"><?php echo htmlspecialchars($userDetails['city'] ?? 'Nu este setat'); ?></span>
+                    </div>
                 </div>
                 
-                <div class="detail-row">
-                    <span class="detail-label">ID:</span>
-                    <span class="detail-value"><?php echo htmlspecialchars($userDetails['id']); ?></span>
+                <div class="details-section">
+                    <h3 class="section-title">Informații fizice</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Înălțime:</span>
+                        <span class="detail-value"><?php echo $userDetails['height'] ? htmlspecialchars($userDetails['height']) . ' cm' : 'Nu este setată'; ?></span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Greutate:</span>
+                        <span class="detail-value"><?php echo $userDetails['weight'] ? htmlspecialchars($userDetails['weight']) . ' kg' : 'Nu este setată'; ?></span>
+                    </div>
                 </div>
             </div>
             

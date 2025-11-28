@@ -17,7 +17,7 @@
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    max-width: 700px;
+    max-width: 900px;
 }
 
 .profile-header {
@@ -25,52 +25,81 @@
     align-items: center;
     margin-bottom: 40px;
     padding-bottom: 30px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 2px solid #e0e0e0;
 }
 
 .profile-avatar {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    background: #d82323;
+    background: linear-gradient(135deg, #d82323, #ff4444);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 40px;
     font-weight: 700;
-    margin-right: 25px;
+    margin-right: 30px;
+    box-shadow: 0 4px 8px rgba(216, 35, 35, 0.3);
 }
 
 .profile-info h2 {
     margin: 0 0 8px 0;
-    font-size: 24px;
+    font-size: 28px;
     color: #1f2b3d;
+    font-weight: 700;
 }
 
 .user-type {
     margin: 0;
     color: #666;
-    font-size: 14px;
+    font-size: 15px;
     text-transform: capitalize;
+    background: #f5f5f5;
+    padding: 4px 12px;
+    border-radius: 15px;
+    display: inline-block;
 }
 
 .profile-details {
     margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.details-section:nth-child(3) {
+    grid-column: 1 / -1;
+}
+
+.details-section {
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 8px;
+    border-left: 4px solid #d82323;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2b3d;
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .detail-row {
     display: flex;
-    padding: 15px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 0;
+    align-items: center;
 }
 
 .detail-row:last-child {
-    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .detail-label {
-    flex: 0 0 150px;
+    flex: 0 0 120px;
     font-weight: 600;
     color: #1f2b3d;
     font-size: 14px;
@@ -80,6 +109,9 @@
     flex: 1;
     color: #555;
     font-size: 14px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 4px;
 }
 
 .profile-actions {

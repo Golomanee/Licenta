@@ -30,6 +30,16 @@
     border: 1px solid #ffcccc;
 }
 
+.success-message {
+    background-color: #e6ffe6;
+    color: #28a745;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid #ccffcc;
+}
+
 .login-form {
     display: flex;
     flex-direction: column;
