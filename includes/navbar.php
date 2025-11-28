@@ -16,7 +16,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <button class="dropdown-btn"><?php echo htmlspecialchars($_SESSION['user']['name']); ?> ▼</button>
                 <div class="dropdown-content">
                     <a href="profile.php">Profilul meu</a>
-                    <a href="#">Setări</a>
+                    <a href="settings.php">Setări</a>
                     <a href="logout.php">Ieșire</a>
                 </div>
             </div>
