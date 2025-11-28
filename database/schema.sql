@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `UserDetails` (
   `city` VARCHAR(100) NULL,
   `height` INT NULL,
   `weight` INT NULL,
-  `profileimage` VARCHAR(255) NULL,
+  `profileimage` LONGBLOB NULL,
   FOREIGN KEY (`userid`) REFERENCES `User`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

@@ -19,8 +19,8 @@ if (isset($_POST['delete_user'])) {
     exit;
 }
 
-// Fetch all users
-$result = $conn->query("SELECT u.id, u.email, u.role, u.email_verified, ud.name FROM User u LEFT JOIN UserDetails ud ON u.id = ud.userid ORDER BY u.id");
+// Fetch all users with profile image info
+$result = $conn->query("SELECT u.id, u.email, u.role, u.email_verified, ud.name, IF(ud.profileimage IS NOT NULL, 1, 0) as has_image FROM User u LEFT JOIN UserDetails ud ON u.id = ud.userid ORDER BY u.id");
 $users = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -47,7 +47,11 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
                 <?php foreach ($users as $user): ?>
                     <div class="user-card">
                         <div class="user-avatar">
-                            <?php echo strtoupper(substr($user['name'] ?? 'U', 0, 1)); ?>
+                            <?php if ($user['has_image']): ?>
+                                <img src="image.php?id=<?php echo $user['id']; ?>" alt="Profile" class="avatar-image">
+                            <?php else: ?>
+                                <?php echo strtoupper(substr($user['name'] ?? 'U', 0, 1)); ?>
+                            <?php endif; ?>
                         </div>
                         <div class="user-info">
                             <h3><?php echo htmlspecialchars($user['name'] ?? 'Nume necunoscut'); ?></h3>

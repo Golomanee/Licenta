@@ -44,7 +44,11 @@ if ($userDetails['birthday']) {
         <div class="profile-box">
             <div class="profile-header">
                 <div class="profile-avatar">
-                    <?php echo strtoupper(substr($userDetails['name'], 0, 1)); ?>
+                    <?php if (!empty($userDetails['profileimage'])): ?>
+                        <img src="image.php?id=<?php echo $userId; ?>" alt="Profile Picture" class="profile-image">
+                    <?php else: ?>
+                        <?php echo strtoupper(substr($userDetails['name'], 0, 1)); ?>
+                    <?php endif; ?>
                 </div>
                 <div class="profile-info">
                     <h2><?php echo htmlspecialchars($userDetails['name']); ?></h2>
@@ -104,7 +108,7 @@ if ($userDetails['birthday']) {
             </div>
             
             <div class="profile-actions">
-                <a href="edit-profile.php" class="btn btn-red">Editează profilul</a>
+                <a href="settings.php" class="btn btn-red">Editează profilul</a>
                 <a href="change-password.php" class="btn btn-grey">Schimbă parola</a>
             </div>
         </div>
