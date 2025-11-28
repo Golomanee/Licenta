@@ -9,8 +9,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password_hash'] ?? '';
     
     if (!empty($identifier) && !empty($password)) {
-        // Prepare statement to check user by name
-        $stmt = $conn->prepare("SELECT * FROM user WHERE name = ?");
+        // Check if identifier contains @ to determine if it's email or name
+        if (strpos($identifier, '@') !== false) {
+            // Search by email in User table
+            $stmt = $conn->prepare("SELECT u.*, ud.name FROM User u LEFT JOIN UserDetails ud ON u.id = ud.userid WHERE u.email = ?");
+        } else {
+            // Search by name in UserDetails table
+            $stmt = $conn->prepare("SELECT u.*, ud.name FROM User u INNER JOIN UserDetails ud ON u.id = ud.userid WHERE ud.name = ?");
+        }
+        
         $stmt->bind_param("s", $identifier);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -18,20 +25,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
             
+            // Check if email is verified
+            if ($user['email_verified'] == 0) {
+                $error = 'Te rugăm să verifici adresa de email înainte de a te autentifica.';
+            }
             // Check if password matches (plain text comparison)
-            if ($password === $user['password']) {
+            else if ($password === $user['password']) {
                 $_SESSION['user'] = [
                     'id' => $user['id'],
                     'name' => $user['name'],
-                    'type' => $user['type']
+                    'role' => $user['role']
                 ];
                 header('Location: index.php');
                 exit;
             } else {
-                $error = 'Nume sau parolă incorectă.';
+                $error = 'Email/nume sau parolă incorectă.';
             }
         } else {
-            $error = 'Nume sau parolă incorectă.';
+            $error = 'Email/nume sau parolă incorectă.';
         }
         
         $stmt->close();
@@ -102,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
             
             <p class="signup-text">
-                Nu ai cont? <a href="#" class="signup-link">Înregistrează-te</a>
+                Nu ai cont? <a href="register.php" class="signup-link">Înregistrează-te</a>
             </p>
         </div>
     </div>
