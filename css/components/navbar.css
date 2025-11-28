@@ -27,6 +27,17 @@
     overflow: visible;
 }
 
+.navbar-logo {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo img {
+    height: 50px;
+    width: auto;
+}
+
 .navbar-left {
     width: 100%;
     background-color: white;

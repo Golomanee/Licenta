@@ -35,9 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'id' => $user['id'],
                     'name' => $user['name'],
                     'role' => $user['role']
-                ];
-                header('Location: index.php');
-                exit;
+                ]; 
+                if ($user['role'] === 'admin') {
+                    header('Location: admindashboard.php');
+                    exit;
+                }
+                else {
+                    header('Location: index.php');
+                    exit;
+                }
             } else {
                 $error = 'Email/nume sau parolă incorectă.';
             }

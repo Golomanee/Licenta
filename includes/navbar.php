@@ -5,6 +5,9 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <nav class="top-navbar">
     <div class="navbar-right">
+        <a href="index.php" class="navbar-logo">
+            <img src="images/logo.png" alt="Spital Logo">
+        </a>
         <?php if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'doctor'): ?>
             <a href="#">Programează-te</a>
         <?php endif; ?>
