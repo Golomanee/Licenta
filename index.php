@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+// Prevent caching - force revalidation
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+?>
 <!DOCTYPE html>
 <html>
 <head>

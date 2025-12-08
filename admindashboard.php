@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+// Prevent caching - force revalidation
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 require_once 'config/database.php';
 
 // Check if user is logged in and is admin
@@ -92,6 +98,13 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
             document.getElementById(tabName + '-tab').classList.add('active');
             event.target.classList.add('active');
         }
+        
+        // Prevent back button cache
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
     </script>
 </body>
 </html>
