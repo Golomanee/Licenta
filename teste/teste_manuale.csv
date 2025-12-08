@@ -1,0 +1,53 @@
+sep=,
+Funcionalitate,Intrebare test,Versiunea,Tester,Data,Status PASS Buguri
+Logare,Deschide aplicatie. Du-te pe logare. Introdu un username si parola valida. A reusit logarea?,1,Adi,8/11/2025,PASS
+Logare,Deschide aplicatie. Du-te pe logare. Introdu un username gresit. Ai primit mesaj ca username-ul nu exista?,1,Adi,8/11/2025,PASS
+Logare,Deschide aplicatia. Du-te pe cont nou. Introdu un mail valid. Ai primti mail de confirmare?,1,Adi,8/11/2025,PASS
+Sign up,Deschide mail. Apasa pe confirmare mail. Merge sa te loghezi?,1,Adi,8/11/2025,PASS
+Setari,Intra in cont pe setari. Adauga date. Au fost actualizate pe profil?,1,Adi,8/11/2025,PASS
+Permisiuni,Intra in cont de pacient. Incearca sa introduci urlul pentru admin dashboard? Ai primit eroare?,1,Adi,8/11/2025,PASS
+Delogare,Intra in cont de admin. Delogheaza-te. Incearca sa intri pe admin dashboard delogat.,1,Adi,8/11/2025,PASS
+Setari,Deshide setari dupa ce ai introdus o data datele. Schimba-le. Au fost schimbate?,1,Adi,8/11/2025,PASS
+Schimbare parola,Intra pe setari. Schimba parola. Incearca sa te loghezi. A functionat?,1,Adi,8/11/2025,PASS
+Programare,Intra in contul de user. Fa o programare. A functionat?,1,Adi,8/11/2025,PASS
+Programare,Intra in contul de user. Fa o programare. Iti apare in cont?,1,Adi,8/11/2025,PASS
+Programare,Fa o programare. Intra pe contul de doctor. Ii apare programarea doctorului corespunzator?,1,Adi,8/11/2025,PASS
+Programare,Intra in contul de doctor. Pe o programare realizata. Adauga un fisier invalid. A aparut eroarea?,1,Adi,8/11/2025,PASS
+Programare,Intra in contul de doctor. Anuleaza o programare. A reusit anularea?,1,Adi,8/11/2025,PASS
+Programare,Intra in contul de doctor. Finalizeaza o programare. Intra pe contul de user.,1,Adi,8/11/2025,PASS
+Inregistrare,Acceseaza pagina register.php. Completeaza email valid test@example.com. Numele Test User. Parola Test123. Confirma parola Test123. Click pe butonul Inregistrare-te,1,Adi,8/11/2025,PASS
+Inregistrare,Acceseaza register.php. Completeaza cu un email deja existent in BD. Completeaza celelalte campuri valid. Click Inregistrare-te,1,Adi,8/11/2025,PASS
+Inregistrare,Acceseaza register.php. Completeaza Email testexample.com fara @. Completeaza celelalte campuri valid. Click Inregistrare-te,1,Adi,8/11/2025,PASS
+Inregistrare,Acceseaza register.php. Completeaza toate campurile. Parola Test123. Confirma parola Test456. Click Inregistrare-te,1,Adi,8/11/2025,PASS
+Inregistrare,Acceseaza register.php. Lasa unul sau mai multe campuri goale. Click Inregistrare-te,1,Adi,8/11/2025,PASS
+Verificare email,Inregistreaza un cont nou. Acceseaza emailul primit. Click pe linkul de verificare din email,1,Adi,8/11/2025,PASS
+Verificare email,Inregistreaza un cont. Asteapta 24h SAU modifica manual token_expires in BD. Click pe linkul din email,1,Adi,8/11/2025,PASS
+Verificare email,Verifica un cont prin link. Click din nou pe acelasi link,1,Adi,8/11/2025,PASS
+Login,Acceseaza login.php. Completeaza Email user@example.com. Completeaza Parola parola_corecta. Click Intra in cont,1,Adi,8/11/2025,PASS
+Login,Acceseaza login.php. Completeaza Email sau nume NumeUtilizator fara @. Completeaza parola corecta. Click Intra in cont,1,Adi,8/11/2025,PASS
+Login,Acceseaza login.php. Completeaza email corect. Completeaza parola gresita. Click Intra in cont,1,Adi,8/11/2025,PASS
+Login,Inregistreaza un cont nou. NU verifica emailul. Incearca sa te loghezi,1,Adi,8/11/2025,PASS
+Profil,Logheaza-te cu orice cont. Click pe numele tau din navbar Profilul meu. Verifica sectiunea Informatii personale,1,Adi,8/11/2025,PASS
+Profil,Acceseaza profilul. Verifica sectiunea Locatie,1,Adi,8/11/2025,PASS
+Profil,Acceseaza profilul. Verifica sectiunea Informatii fizice,1,Adi,8/11/2025,PASS
+Profil,Logheaza-te cu cont care are poza incarcata. Acceseaza profilul,1,Adi,8/11/2025,PASS
+Profil,Logheaza-te cu cont fara poza. Acceseaza profilul,1,Adi,8/11/2025,PASS
+Profil,Seteaza o data de nastere in BD ex 1990-05-15. Acceseaza profilul,1,Adi,8/11/2025,PASS
+Setari,Acceseaza Settings. Modifica Nume Nume Nou. Modifica Telefon 0712345678. Modifica Oras Bucuresti. Click Salveaza modificarile,1,Adi,8/11/2025,PASS
+Setari,Acceseaza Settings. Click Alege fisier in sectiunea poza profil. Selecteaza o imagine JPG PNG sub 5MB. Click Salveaza modificarile,1,Adi,8/11/2025,PASS
+Setari,Acceseaza Settings. Incearca sa incarci un PDF SAU imagine peste 5MB. Click Salveaza,1,Adi,8/11/2025,PASS
+Setari,Acceseaza Settings. Modifica emailul cu unul care apartine altui utilizator. Click Salveaza,1,Adi,8/11/2025,PASS
+Navbar,Acceseaza orice pagina index profile. Scroll in jos pe pagina. Observa navbar-ul,1,Adi,8/11/2025,PASS
+Navbar,Logheaza-te. Hover cu mouse-ul peste numele tau din navbar dreapta sus,1,Adi,8/11/2025,PASS
+Navbar,Fiind pe orice pagina. Click pe logo-ul din stanga navbar-ului,1,Adi,8/11/2025,PASS
+Logout,Click pe numele tau Iesire. Verifica redirect,1,Adi,8/11/2025,PASS
+Responsive,Redimensioneaza browser-ul la latime mai mica de 768px SAU Deschide site-ul pe telefon,1,Adi,8/11/2025,PASS
+Navbar doctor,Logheaza-te cu cont role doctor. Verifica navbar-ul,1,Adi,8/11/2025,PASS
+Admin,Logheaza-te cu cont role admin. Acceseaza admindashboard.php,1,Adi,8/11/2025,PASS
+Admin,Logheaza-te ca pacient doctor. Incearca sa accesezi direct admindashboard.php,1,Adi,8/11/2025,PASS
+Admin,Logheaza-te ca admin. Verifica tab Administreaza conturi,1,Adi,8/11/2025,PASS
+Admin,Click pe tab Administreaza conturi. Verifica continutul,1,Adi,8/11/2025,PASS
+Admin,In admin dashboard. Click pe Editeaza la un utilizator,1,Adi,8/11/2025,PASS
+Admin,Click pe butonul rosu Sterge. Confirma in dialog JavaScript,1,Adi,8/11/2025,PASS
+Admin,Utilizatori cu poza incarcata. Verifica in admin dashboard,1,Adi,8/11/2025,PASS
+Admin,Verifica utilizatori cu role diferite,1,Adi,8/11/2025,PASS
