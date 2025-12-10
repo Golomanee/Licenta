@@ -25,9 +25,49 @@ if (isset($_POST['delete_user'])) {
     exit;
 }
 
-// Fetch all users with profile image info
-$result = $conn->query("SELECT u.id, u.email, u.role, u.email_verified, ud.name, IF(ud.profileimage IS NOT NULL, 1, 0) as has_image FROM User u LEFT JOIN UserDetails ud ON u.id = ud.userid ORDER BY u.id");
-$users = $result->fetch_all(MYSQLI_ASSOC);
+// Get search and filter parameters
+$searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
+$roleFilter = isset($_GET['role']) ? $_GET['role'] : '';
+
+// Build SQL query with search and filter
+$sql = "SELECT u.id, u.email, u.role, u.email_verified, ud.name, IF(ud.profileimage IS NOT NULL, 1, 0) as has_image 
+        FROM User u 
+        LEFT JOIN UserDetails ud ON u.id = ud.userid 
+        WHERE 1=1";
+
+$params = [];
+$types = '';
+
+// Add search condition
+if (!empty($searchQuery)) {
+    $sql .= " AND (ud.name LIKE ? OR u.email LIKE ?)";
+    $searchParam = "%{$searchQuery}%";
+    $params[] = $searchParam;
+    $params[] = $searchParam;
+    $types .= 'ss';
+}
+
+// Add role filter
+if (!empty($roleFilter) && in_array($roleFilter, ['patient', 'doctor', 'admin'])) {
+    $sql .= " AND u.role = ?";
+    $params[] = $roleFilter;
+    $types .= 's';
+}
+
+$sql .= " ORDER BY u.id";
+
+// Execute query
+if (!empty($params)) {
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $users = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+} else {
+    $result = $conn->query($sql);
+    $users = $result->fetch_all(MYSQLI_ASSOC);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,7 +81,7 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
     <?php include 'includes/navbar.php'; ?>
     
     <div class="page-container">
-        <h1 class="page-title">Administrează conturi</h1>
+        <h1 class="page-title">Administreaza conturi</h1>
         
         <div class="admin-tabs">
             <button class="tab-btn active" onclick="showTab('users')">Administreaza conturi</button>
@@ -49,6 +89,53 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
         </div>
         
         <div id="users-tab" class="tab-content active">
+            <!-- Search and Filter Section -->
+            <div class="search-filter-container">
+                <form method="GET" action="admindashboard.php" class="search-filter-form">
+                    <div class="search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" name="search" placeholder="Search by name or email..." value="<?php echo htmlspecialchars($searchQuery); ?>" class="search-input">
+                    </div>
+                    
+                    <div class="filter-box">
+                        <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        <select name="role" class="filter-select" onchange="this.form.submit()">
+                            <option value="">All Roles</option>
+                            <option value="patient" <?php echo $roleFilter === 'patient' ? 'selected' : ''; ?>>Patient</option>
+                            <option value="doctor" <?php echo $roleFilter === 'doctor' ? 'selected' : ''; ?>>Doctor</option>
+                            <option value="admin" <?php echo $roleFilter === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="search-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        Search
+                    </button>
+                    
+                    <?php if (!empty($searchQuery) || !empty($roleFilter)): ?>
+                        <a href="admindashboard.php" class="clear-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            Clear
+                        </a>
+                    <?php endif; ?>
+                </form>
+                
+                <div class="results-count">
+                    <span><?php echo count($users); ?> user<?php echo count($users) !== 1 ? 's' : ''; ?> found</span>
+                </div>
+            </div>
+            
             <div class="users-list">
                 <?php foreach ($users as $user): ?>
                     <div class="user-card">
