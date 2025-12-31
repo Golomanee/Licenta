@@ -42,9 +42,41 @@ CREATE TABLE IF NOT EXISTS `EduPosts` (
   FOREIGN KEY (`creator_id`) REFERENCES `User`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Comments table (with support for nested replies)
+CREATE TABLE IF NOT EXISTS `Comments` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `post_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `content` TEXT NOT NULL,
+  `parent_comment_id` INT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`post_id`) REFERENCES `EduPosts`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`parent_comment_id`) REFERENCES `Comments`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `Likes` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `post_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `type` ENUM('like', 'dislike') DEFAULT 'like',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_post_user_like` (`post_id`, `user_id`),
+  FOREIGN KEY (`post_id`) REFERENCES `EduPosts`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Create indexes for better performance
 CREATE INDEX `idx_user_email` ON `User`(`email`);
 CREATE INDEX `idx_user_role` ON `User`(`role`);
 CREATE INDEX `idx_userdetails_userid` ON `UserDetails`(`userid`);
 CREATE INDEX `idx_eduposts_creator` ON `EduPosts`(`creator_id`);
 CREATE INDEX `idx_eduposts_created` ON `EduPosts`(`created_at`);
+-- Posts table removed; using `EduPosts` instead.
+CREATE INDEX `idx_comments_post` ON `Comments`(`post_id`);
+CREATE INDEX `idx_comments_user` ON `Comments`(`user_id`);
+CREATE INDEX `idx_comments_parent` ON `Comments`(`parent_comment_id`);
+CREATE INDEX `idx_comments_created` ON `Comments`(`created_at`);
+CREATE INDEX `idx_likes_post` ON `Likes`(`post_id`);
+CREATE INDEX `idx_likes_user` ON `Likes`(`user_id`);

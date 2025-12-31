@@ -35,9 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'id' => $user['id'],
                     'name' => $user['name'],
                     'role' => $user['role']
-                ]; 
+                ];
+                $_SESSION['user_id'] = $user['id'];
+                
                 if ($user['role'] === 'admin') {
                     header('Location: admindashboard.php');
+                    exit;
+                }
+                elseif ($user['role'] === 'doctor') {
+                    header('Location: doctordashboard.php');
                     exit;
                 }
                 else {

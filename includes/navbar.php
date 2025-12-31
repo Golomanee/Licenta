@@ -28,6 +28,18 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="navbar-left">
         <a href="#">Medici</a>
         <a href="#">Specialitati</a>
-        <a href="#">EDU</a>
+        <a href="edu.php">EDU</a>
     </div>
 </nav>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var nav = document.querySelector('.top-navbar');
+    if (nav) {
+        function adjustBodyPadding() {
+            document.body.style.paddingTop = nav.offsetHeight + 'px';
+        }
+        adjustBodyPadding();
+        window.addEventListener('resize', adjustBodyPadding);
+    }
+});
+</script>
