@@ -111,7 +111,7 @@ $stmt->close();
 
     <div class="doctor-dashboard">
         <!-- Tabs -->
-        <div class="dashboard-tabs">
+        <div class="admin-tabs">
             <a href="?tab=appointments" class="tab-btn <?php echo $active_tab === 'appointments' ? 'active' : ''; ?>">
                 Programări
             </a>

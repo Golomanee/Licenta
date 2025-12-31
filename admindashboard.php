@@ -68,6 +68,42 @@ if (!empty($params)) {
     $result = $conn->query($sql);
     $users = $result->fetch_all(MYSQLI_ASSOC);
 }
+
+// Handle delete post
+if (isset($_POST['delete_post'])) {
+    $postId = (int)$_POST['post_id'];
+    // Delete image file if exists
+    $imgStmt = $conn->prepare("SELECT image FROM EduPosts WHERE id = ?");
+    $imgStmt->bind_param("i", $postId);
+    $imgStmt->execute();
+    $imgRes = $imgStmt->get_result();
+    if ($imgRow = $imgRes->fetch_assoc()) {
+        if (!empty($imgRow['image']) && file_exists($imgRow['image'])) {
+            @unlink($imgRow['image']);
+        }
+    }
+    $imgStmt->close();
+    
+    $stmt = $conn->prepare("DELETE FROM EduPosts WHERE id = ?");
+    $stmt->bind_param("i", $postId);
+    $stmt->execute();
+    $stmt->close();
+    header('Location: admindashboard.php?tab=posts');
+    exit;
+}
+
+// Fetch all posts with author info
+$postsSql = "SELECT p.*, COALESCE(ud.name, u.email, 'Autor necunoscut') AS author_name,
+  CASE WHEN ud.profileimage IS NOT NULL THEN 1 ELSE 0 END AS has_profile_image
+FROM EduPosts p
+LEFT JOIN User u ON p.creator_id = u.id
+LEFT JOIN UserDetails ud ON u.id = ud.userid
+ORDER BY p.created_at DESC";
+$postsResult = $conn->query($postsSql);
+$posts = $postsResult ? $postsResult->fetch_all(MYSQLI_ASSOC) : [];
+
+// Check which tab is active
+$activeTab = isset($_GET['tab']) && $_GET['tab'] === 'posts' ? 'posts' : 'users';
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,11 +120,11 @@ if (!empty($params)) {
         <h1 class="page-title">Administreaza conturi</h1>
         
         <div class="admin-tabs">
-            <button class="tab-btn active" onclick="showTab('users')">Administreaza conturi</button>
-            <button class="tab-btn" onclick="showTab('posts')">Editeaza postari</button>
+            <button class="tab-btn <?php echo $activeTab === 'users' ? 'active' : ''; ?>" onclick="showTab('users')">Administreaza conturi</button>
+            <button class="tab-btn <?php echo $activeTab === 'posts' ? 'active' : ''; ?>" onclick="showTab('posts')">Editeaza postari</button>
         </div>
         
-        <div id="users-tab" class="tab-content active">
+        <div id="users-tab" class="tab-content <?php echo $activeTab === 'users' ? 'active' : ''; ?>">
             <!-- Search and Filter Section -->
             <div class="search-filter-container">
                 <form method="GET" action="admindashboard.php" class="search-filter-form">
@@ -166,8 +202,51 @@ if (!empty($params)) {
             </div>
         </div>
         
-        <div id="posts-tab" class="tab-content">
-            <p style="text-align: center; color: #666; padding: 40px;">Funcționalitate în dezvoltare...</p>
+        <div id="posts-tab" class="tab-content <?php echo $activeTab === 'posts' ? 'active' : ''; ?>">
+            <div class="results-count" style="margin-bottom: 20px;">
+                <span><?php echo count($posts); ?> postăr<?php echo count($posts) !== 1 ? 'i' : 'e'; ?> găsite</span>
+            </div>
+            
+            <?php if (count($posts) === 0): ?>
+                <p style="text-align: center; color: #666; padding: 40px;">Nu există postări.</p>
+            <?php else: ?>
+                <div class="posts-list">
+                    <?php foreach ($posts as $post): ?>
+                        <div class="post-card">
+                            <div class="post-image">
+                                <?php if (!empty($post['image']) && file_exists($post['image'])): ?>
+                                    <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>">
+                                <?php else: ?>
+                                    <div class="post-image-placeholder">📄</div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="post-info">
+                                <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+                                <div class="post-meta">
+                                    <div class="post-author">
+                                        <div class="post-author-avatar">
+                                            <?php if (!empty($post['has_profile_image'])): ?>
+                                                <img src="image.php?id=<?php echo $post['creator_id']; ?>" alt="<?php echo htmlspecialchars($post['author_name']); ?>">
+                                            <?php else: ?>
+                                                <?php echo strtoupper(substr($post['author_name'], 0, 1)); ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <span><?php echo htmlspecialchars($post['author_name']); ?></span>
+                                    </div>
+                                    <span class="post-date"><?php echo date('d M Y', strtotime($post['created_at'])); ?></span>
+                                </div>
+                            </div>
+                            <div class="post-actions">
+                                <a href="editpost.php?id=<?php echo $post['id']; ?>&from=admin" class="btn-edit">Editează</a>
+                                <form method="POST" style="display: inline;" onsubmit="return confirm('Sigur vrei să ștergi această postare?');">
+                                    <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                                    <button type="submit" name="delete_post" class="btn-delete">Șterge</button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
     

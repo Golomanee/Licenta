@@ -5,44 +5,44 @@
 .doctor-dashboard {
     background-color: #f5f5f5;
     min-height: calc(100vh - 60px);
-}
-
-/* Tabs */
-.dashboard-tabs {
-    background-color: #f0f0f0;
-    display: flex;
-    border-bottom: 1px solid #ddd;
+    max-width: 1200px;
+    margin: 50px auto;
     padding: 0 20px;
 }
 
-.tab-btn {
-    padding: 15px 25px;
-    font-size: 15px;
+/* Tabs - same as admin */
+.doctor-dashboard .admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.doctor-dashboard .tab-btn {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 14px;
     font-weight: 600;
     color: #666;
-    text-decoration: none;
     cursor: pointer;
-    border: none;
-    background: none;
-    border-bottom: 3px solid transparent;
+    text-decoration: none;
     transition: all 0.3s;
 }
 
-.tab-btn:hover {
-    color: #333;
-    background-color: #e8e8e8;
+.doctor-dashboard .tab-btn:hover {
+    color: #d82323;
 }
 
-.tab-btn.active {
-    color: #4CAF50;
-    border-bottom-color: #4CAF50;
+.doctor-dashboard .tab-btn.active {
+    color: #d82323;
+    border-bottom-color: #d82323;
 }
 
 /* Content */
 .dashboard-content {
-    padding: 30px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 0;
 }
 
 .tab-content {
@@ -72,8 +72,8 @@
 .article-form-header {
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #f9f9f9;
-    border-left: 4px solid #4CAF50;
+    background-color: #fef2f2;
+    border-left: 4px solid #d82323;
     border-radius: 4px;
 }
 
@@ -101,8 +101,8 @@
 
 .input-field:focus {
     outline: none;
-    border-color: #4CAF50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+    border-color: #d82323;
+    box-shadow: 0 0 5px rgba(216, 35, 35, 0.2);
 }
 
 .input-field[type="text"] {

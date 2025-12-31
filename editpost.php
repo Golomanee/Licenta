@@ -2,12 +2,16 @@
 session_start();
 require_once 'config/database.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user'])) {
     header('Location: login.php');
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user']['id'];
+$user_role = $_SESSION['user']['role'];
+$is_admin = ($user_role === 'admin');
+$from = isset($_GET['from']) ? $_GET['from'] : '';
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $can_edit = true;
 if ($id <= 0) {
@@ -25,7 +29,7 @@ if ($id <= 0) {
     if (!$post) {
         $error = 'Articolul nu a fost găsit.';
         $can_edit = false;
-    } elseif ($post['creator_id'] != $user_id) {
+    } elseif (!$is_admin && $post['creator_id'] != $user_id) {
         $error = 'Nu ai permisiunea de a edita acest articol.';
         $can_edit = false;
     }
@@ -70,9 +74,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($error)) {
-            $upd = $conn->prepare("UPDATE EduPosts SET title = ?, text = ?, image = ? WHERE id = ? AND creator_id = ?");
-            if ($upd) {
+            if ($is_admin) {
+                $upd = $conn->prepare("UPDATE EduPosts SET title = ?, text = ?, image = ? WHERE id = ?");
+                $upd->bind_param('sssi', $title, $content, $image_path, $id);
+            } else {
+                $upd = $conn->prepare("UPDATE EduPosts SET title = ?, text = ?, image = ? WHERE id = ? AND creator_id = ?");
                 $upd->bind_param('sssii', $title, $content, $image_path, $id, $user_id);
+            }
+            if ($upd) {
                 if ($upd->execute()) {
                     $success = 'Articolul a fost actualizat.';
                     // refresh post data
@@ -97,36 +106,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Editează articol - Spital</title>
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/pages/admin.css">
-    <link rel="stylesheet" href="css/components/navbar.css">
+  <link rel="stylesheet" href="css/components/navbar.css">
+  <link rel="stylesheet" href="css/pages/createpost.css">
   <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
 </head>
 <body>
 <?php include 'includes/navbar.php'; ?>
 
-<div class="page-container">
-  <h1 class="page-title">Editează articol</h1>
+<div class="create-post-container">
+  <div class="form-header">
+    <h1>Editează articol</h1>
+    <p class="form-subtitle">Modifică detaliile articolului și salvează schimbările</p>
+  </div>
 
   <?php if (!empty($error)): ?>
-    <div class="alert alert-error"><strong>Eroare:</strong> <?php echo htmlspecialchars($error); ?></div>
+    <div class="alert alert-error">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-content">
+        <strong>Eroare:</strong> <?php echo htmlspecialchars($error); ?>
+      </div>
+    </div>
   <?php endif; ?>
   <?php if (!empty($success)): ?>
-    <div class="alert alert-success"><strong>Succes:</strong> <?php echo htmlspecialchars($success); ?></div>
+    <div class="alert alert-success">
+      <span class="alert-icon">✓</span>
+      <div class="alert-content">
+        <strong>Succes:</strong> <?php echo htmlspecialchars($success); ?>
+      </div>
+    </div>
   <?php endif; ?>
 
   <?php if ($can_edit): ?>
   <form method="POST" enctype="multipart/form-data" id="editPostForm">
     <div class="form-group">
       <label for="title">Titlu *</label>
-      <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post['title']); ?>" required>
+      <input type="text" id="title" name="title" placeholder="Introduceți titlul articolului..." value="<?php echo htmlspecialchars($post['title']); ?>" required>
     </div>
 
     <div class="form-group">
       <label for="post_image">Imagine (opțional)</label>
       <?php if (!empty($post['image']) && file_exists($post['image'])): ?>
-        <div style="margin-bottom:8px;"><img src="<?php echo htmlspecialchars($post['image']); ?>" alt="img" style="max-width:200px; height:auto; border-radius:6px;"></div>
+        <div class="current-image">
+          <span class="current-image-label">Imagine curentă:</span>
+          <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Imagine articol">
+          <span class="current-image-hint">Încarcă o nouă imagine pentru a o înlocui</span>
+        </div>
       <?php endif; ?>
-      <input type="file" id="post_image" name="post_image" accept="image/*">
+      <input type="file" id="post_image" name="post_image" accept="image/*" onchange="previewImage(this)">
+      <small class="form-hint">Formate acceptate: JPG, PNG, GIF, WEBP</small>
+      <div id="imagePreview" class="image-preview"></div>
     </div>
 
     <div class="form-group">
@@ -135,17 +163,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="button-group">
-      <a href="doctordashboard.php" class="btn btn-cancel">Anulează</a>
+      <a href="<?php echo $from === 'admin' ? 'admindashboard.php?tab=posts' : 'doctordashboard.php'; ?>" class="btn btn-cancel">Anulează</a>
       <button type="submit" class="btn btn-submit">Salvează modificările</button>
     </div>
   </form>
   <?php else: ?>
-    <p style="margin-top:20px;"><a href="doctordashboard.php">Înapoi la dashboard</a></p>
+    <div class="no-permission">
+      <span class="no-permission-icon">🔒</span>
+      <p>Nu ai permisiunea de a edita acest articol.</p>
+      <a href="<?php echo $from === 'admin' ? 'admindashboard.php?tab=posts' : 'doctordashboard.php'; ?>" class="btn btn-cancel">Înapoi</a>
+    </div>
   <?php endif; ?>
 </div>
 
 <script>
-tinymce.init({ selector: '#content', height: 400, plugins: ['advlist','autolink','lists','link','image','charmap','code','fullscreen','media','table','preview','help','wordcount'], toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link image | code | fullscreen' });
+// Preview image before upload
+function previewImage(input) {
+  const preview = document.getElementById('imagePreview');
+  preview.innerHTML = '';
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// TinyMCE Editor
+tinymce.init({
+  selector: '#content',
+  height: 400,
+  plugins: ['advlist','autolink','lists','link','image','charmap','code','fullscreen','media','table','preview','help','wordcount'],
+  toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | code fullscreen',
+  menubar: 'file edit view insert format tools table help',
+  content_style: 'body { font-family: Arial, sans-serif; font-size: 14px; }'
+});
 </script>
 </body>
 </html>

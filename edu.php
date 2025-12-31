@@ -31,7 +31,7 @@ if ($row = $res->fetch_assoc()) {
 }
 $stmt->close();
 
-$sql = "SELECT p.*, u.id as user_id, ud.name as author_name,\n  COALESCE(l.likes_count,0) AS likes_count,\n  COALESCE(d.dislikes_count,0) AS dislikes_count,\n  (COALESCE(l.likes_count,0) - COALESCE(d.dislikes_count,0)) AS net_score\nFROM EduPosts p\nLEFT JOIN (SELECT post_id, COUNT(*) AS likes_count FROM Likes WHERE type = 'like' GROUP BY post_id) l ON l.post_id = p.id\nLEFT JOIN (SELECT post_id, COUNT(*) AS dislikes_count FROM Likes WHERE type = 'dislike' GROUP BY post_id) d ON d.post_id = p.id\nLEFT JOIN User u ON p.creator_id = u.id\nLEFT JOIN UserDetails ud ON u.id = ud.userid\n" . $where . " ORDER BY net_score DESC, p.created_at DESC LIMIT ? OFFSET ?";
+$sql = "SELECT p.*, u.id as user_id,\n  COALESCE(ud.name, u.email, 'Autor necunoscut') AS author_name,\n  CASE WHEN ud.profileimage IS NOT NULL THEN 1 ELSE 0 END AS has_profile_image,\n  COALESCE(l.likes_count,0) AS likes_count,\n  COALESCE(d.dislikes_count,0) AS dislikes_count,\n  (COALESCE(l.likes_count,0) - COALESCE(d.dislikes_count,0)) AS net_score\nFROM EduPosts p\nLEFT JOIN (SELECT post_id, COUNT(*) AS likes_count FROM Likes WHERE type = 'like' GROUP BY post_id) l ON l.post_id = p.id\nLEFT JOIN (SELECT post_id, COUNT(*) AS dislikes_count FROM Likes WHERE type = 'dislike' GROUP BY post_id) d ON d.post_id = p.id\nLEFT JOIN User u ON p.creator_id = u.id\nLEFT JOIN UserDetails ud ON u.id = ud.userid\n" . $where . " ORDER BY net_score DESC, p.created_at DESC LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     die('Prepare failed: ' . htmlspecialchars($conn->error));
@@ -96,10 +96,24 @@ $totalPages = max(1, (int)ceil($total / $perPage));
 
                             <div class="card-body">
                                 <h3><?php echo htmlspecialchars($post['title']); ?></h3>
-                                <p class="card-date"><?php echo date('d M Y', strtotime($post['created_at'])); ?></p>
-                                <div class="card-stats">
-                                  <span class="stat-item">👍 <?php echo $post['likes_count']; ?></span>
-                                  <span class="stat-item">👎 <?php echo $post['dislikes_count']; ?></span>
+                                <div class="card-meta">
+                                    <div class="card-author">
+                                        <div class="card-avatar">
+                                            <?php if (!empty($post['has_profile_image'])): ?>
+                                                <img src="image.php?id=<?php echo $post['creator_id']; ?>" alt="<?php echo htmlspecialchars($post['author_name']); ?>">
+                                            <?php else: ?>
+                                                <span class="card-avatar-fallback"><?php echo strtoupper(substr($post['author_name'], 0, 1)); ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="card-author-text">
+                                            <span class="card-author-name"><?php echo htmlspecialchars($post['author_name']); ?></span>
+                                            <span class="card-date"><?php echo date('d M Y', strtotime($post['created_at'])); ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="card-stats">
+                                      <span class="stat-item">👍 <?php echo $post['likes_count']; ?></span>
+                                      <span class="stat-item">👎 <?php echo $post['dislikes_count']; ?></span>
+                                    </div>
                                 </div>
                             </div>
                         </a>
