@@ -68,23 +68,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <title>Intră în cont - Spital</title>
     <link rel="stylesheet" type="text/css" href="css/base.css">
-    <link rel="stylesheet" type="text/css" href="css/components/navbar.css">
     <link rel="stylesheet" type="text/css" href="css/pages/login.css">
 </head>
-<body>
-    <nav class="top-navbar">
-    <div class="navbar-right">
-        <a href="login.php">Creeaza cont nou</a>
-    </div>
-    <div class="navbar-left">
-        <a href="index.php">Acasa</a>
-    </div>
-</nav>
-    
-    <div class="page-container">
-        <h1 class="page-title">Intră în cont</h1>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-logo">
+            <a href="index.php">
+                <img src="images/logo.png" alt="Spital Logo">
+            </a>
+        </div>
         
         <div class="login-box">
+            <h1 class="auth-title">Intră în cont</h1>
+            
             <?php if ($error): ?>
                 <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
@@ -127,6 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="signup-text">
                 Nu ai cont? <a href="register.php" class="signup-link">Înregistrează-te</a>
             </p>
+        </div>
+        
+        <div class="auth-footer">
+            <a href="index.php">Acasă</a>
         </div>
     </div>
 </body>

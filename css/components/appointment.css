@@ -46,6 +46,7 @@
     text-decoration: none;
     font-weight: 600;
     display: inline-block;
+    transition: all 0.3s;
 }
 
 .btn-red {
@@ -53,7 +54,134 @@
     color: #fff;
 }
 
+.btn-red:hover {
+    background: #c01f1f;
+    transform: translateY(-2px);
+}
+
 .btn-grey {
     background: #e8e8e8;
     color: #333;
 }
+
+.btn-grey:hover {
+    background: #d0d0d0;
+    transform: translateY(-2px);
+}
+
+/* Home Page Styles */
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    background: #ffffff;
+    border-radius: 16px;
+    margin: 30px 0;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero-content h1 {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1f2b3d;
+    margin: 0 0 15px 0;
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: #666;
+    margin: 0 0 30px 0;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.hero-buttons .btn {
+    padding: 14px 32px;
+    font-size: 15px;
+}
+
+.hero-buttons .btn-grey {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.hero-buttons .btn-grey:hover {
+    background: #e0e0e0;
+}
+
+/* Top Posts Section */
+.top-posts-section {
+    padding: 40px 0 60px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.section-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2b3d;
+    margin: 0;
+}
+
+.view-all-link {
+    color: #d82323;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 32px;
+    }
+    
+    .hero-content p {
+        font-size: 16px;
+    }
+    
+    .hero-section {
+        padding: 40px 25px;
+        min-height: auto;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
