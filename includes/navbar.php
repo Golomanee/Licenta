@@ -9,7 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <img src="images/logo.png" alt="Spital Logo">
         </a>
         <?php if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'doctor'): ?>
-            <a href="#">Programează-te</a>
+            <a href="verificareprogramare.php">Programează-te</a>
         <?php endif; ?>
         <?php if (isset($_SESSION['user'])): ?>
             <div class="dropdown">
@@ -26,7 +26,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
     
     <div class="navbar-left">
-        <a href="#">Medici</a>
+        <a href="medici.php">Medici</a>
         <a href="#">Specialitati</a>
         <a href="edu.php">EDU</a>
     </div>

@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $city = trim($_POST['city']) ?: null;
     $height = $_POST['height'] ?: null;
     $weight = $_POST['weight'] ?: null;
+    $specialty = ($role === 'doctor' && !empty($_POST['specialty'])) ? $_POST['specialty'] : null;
     $profileImageData = null;
     
     // Handle profile picture upload
@@ -102,22 +103,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($detailsExist) {
                     // Update UserDetails
                     if ($profileImageData !== null) {
-                        $stmt = $conn->prepare("UPDATE UserDetails SET name = ?, birthday = ?, phone = ?, country = ?, city = ?, height = ?, weight = ?, profileimage = ? WHERE userid = ?");
-                        $stmt->bind_param("sssssssbi", $name, $birthday, $phone, $country, $city, $height, $weight, $null, $editUserId);
-                        $stmt->send_long_data(7, $profileImageData);
+                        $stmt = $conn->prepare("UPDATE UserDetails SET name = ?, birthday = ?, phone = ?, country = ?, city = ?, height = ?, weight = ?, specialty = ?, profileimage = ? WHERE userid = ?");
+                        $stmt->bind_param("sssssssssi", $name, $birthday, $phone, $country, $city, $height, $weight, $specialty, $null, $editUserId);
+                        $stmt->send_long_data(8, $profileImageData);
                     } else {
-                        $stmt = $conn->prepare("UPDATE UserDetails SET name = ?, birthday = ?, phone = ?, country = ?, city = ?, height = ?, weight = ? WHERE userid = ?");
-                        $stmt->bind_param("ssssssii", $name, $birthday, $phone, $country, $city, $height, $weight, $editUserId);
+                        $stmt = $conn->prepare("UPDATE UserDetails SET name = ?, birthday = ?, phone = ?, country = ?, city = ?, height = ?, weight = ?, specialty = ? WHERE userid = ?");
+                        $stmt->bind_param("ssssssssi", $name, $birthday, $phone, $country, $city, $height, $weight, $specialty, $editUserId);
                     }
                 } else {
                     // Insert UserDetails
                     if ($profileImageData !== null) {
-                        $stmt = $conn->prepare("INSERT INTO UserDetails (userid, name, birthday, phone, country, city, height, weight, profileimage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                        $stmt->bind_param("isssssiib", $editUserId, $name, $birthday, $phone, $country, $city, $height, $weight, $null);
-                        $stmt->send_long_data(8, $profileImageData);
+                        $stmt = $conn->prepare("INSERT INTO UserDetails (userid, name, birthday, phone, country, city, height, weight, specialty, profileimage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        $stmt->bind_param("issssssssi", $editUserId, $name, $birthday, $phone, $country, $city, $height, $weight, $specialty, $null);
+                        $stmt->send_long_data(9, $profileImageData);
                     } else {
-                        $stmt = $conn->prepare("INSERT INTO UserDetails (userid, name, birthday, phone, country, city, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                        $stmt->bind_param("isssssii", $editUserId, $name, $birthday, $phone, $country, $city, $height, $weight);
+                        $stmt = $conn->prepare("INSERT INTO UserDetails (userid, name, birthday, phone, country, city, height, weight, specialty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        $stmt->bind_param("issssssss", $editUserId, $name, $birthday, $phone, $country, $city, $height, $weight, $specialty);
                     }
                 }
                 
@@ -139,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Fetch user details
-$stmt = $conn->prepare("SELECT u.*, ud.name, ud.birthday, ud.phone, ud.country, ud.city, ud.height, ud.weight FROM User u LEFT JOIN UserDetails ud ON u.id = ud.userid WHERE u.id = ?");
+$stmt = $conn->prepare("SELECT u.*, ud.name, ud.birthday, ud.phone, ud.country, ud.city, ud.height, ud.weight, ud.specialty FROM User u LEFT JOIN UserDetails ud ON u.id = ud.userid WHERE u.id = ?");
 $stmt->bind_param("i", $editUserId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -318,6 +319,21 @@ $stmt->close();
                             <p style="font-size: 12px; color: #666; margin-top: 5px;">Bifează pentru a marca emailul ca verificat</p>
                         </div>
                     </div>
+                    
+                    <div class="form-row specialty-row" id="specialty-row" style="<?php echo $userData['role'] === 'doctor' ? '' : 'display: none;'; ?>">
+                        <div class="form-group">
+                            <label for="specialty">Specializare medicală</label>
+                            <select id="specialty" name="specialty" style="padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; width: 100%;">
+                                <option value="">-- Selectează specializarea --</option>
+                                <option value="cardiolog" <?php echo ($userData['specialty'] ?? '') === 'cardiolog' ? 'selected' : ''; ?>>Cardiolog</option>
+                                <option value="radiolog" <?php echo ($userData['specialty'] ?? '') === 'radiolog' ? 'selected' : ''; ?>>Radiolog</option>
+                                <option value="gastroenterolog" <?php echo ($userData['specialty'] ?? '') === 'gastroenterolog' ? 'selected' : ''; ?>>Gastroenterolog</option>
+                                <option value="pneumolog" <?php echo ($userData['specialty'] ?? '') === 'pneumolog' ? 'selected' : ''; ?>>Pneumolog</option>
+                                <option value="medicina_laborator" <?php echo ($userData['specialty'] ?? '') === 'medicina_laborator' ? 'selected' : ''; ?>>Medicină de Laborator</option>
+                            </select>
+                            <p style="font-size: 12px; color: #666; margin-top: 5px;">Selectează domeniul medical al doctorului</p>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Personal Information Section -->
@@ -418,6 +434,17 @@ $stmt->close();
     </div>
     
     <script>
+        // Toggle specialty field based on role
+        document.getElementById('role').addEventListener('change', function() {
+            const specialtyRow = document.getElementById('specialty-row');
+            if (this.value === 'doctor') {
+                specialtyRow.style.display = '';
+            } else {
+                specialtyRow.style.display = 'none';
+                document.getElementById('specialty').value = '';
+            }
+        });
+        
         // Preview image before upload
         document.getElementById('profile_picture').addEventListener('change', function(e) {
             const file = e.target.files[0];

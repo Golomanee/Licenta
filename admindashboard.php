@@ -30,7 +30,7 @@ $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
 $roleFilter = isset($_GET['role']) ? $_GET['role'] : '';
 
 // Build SQL query with search and filter
-$sql = "SELECT u.id, u.email, u.role, u.email_verified, ud.name, IF(ud.profileimage IS NOT NULL, 1, 0) as has_image 
+$sql = "SELECT u.id, u.email, u.role, u.email_verified, ud.name, ud.specialty, IF(ud.profileimage IS NOT NULL, 1, 0) as has_image 
         FROM User u 
         LEFT JOIN UserDetails ud ON u.id = ud.userid 
         WHERE 1=1";
@@ -186,6 +186,18 @@ $activeTab = isset($_GET['tab']) && $_GET['tab'] === 'posts' ? 'posts' : 'users'
                             <h3><?php echo htmlspecialchars($user['name'] ?? 'Nume necunoscut'); ?></h3>
                             <p class="user-email"><?php echo htmlspecialchars($user['email']); ?></p>
                             <span class="user-role"><?php echo htmlspecialchars(ucfirst($user['role'])); ?></span>
+                            <?php if ($user['role'] === 'doctor' && !empty($user['specialty'])): ?>
+                                <?php 
+                                    $specialtyLabels = [
+                                        'cardiolog' => 'Cardiolog',
+                                        'radiolog' => 'Radiolog',
+                                        'gastroenterolog' => 'Gastroenterolog',
+                                        'pneumolog' => 'Pneumolog',
+                                        'medicina_laborator' => 'Medicină de Laborator'
+                                    ];
+                                ?>
+                                <span class="specialty-badge"><?php echo htmlspecialchars($specialtyLabels[$user['specialty']] ?? $user['specialty']); ?></span>
+                            <?php endif; ?>
                             <?php if ($user['email_verified']): ?>
                                 <span class="verified-badge">✓ Verificat</span>
                             <?php endif; ?>

@@ -278,6 +278,17 @@
     font-weight: 600;
 }
 
+.specialty-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #d82323, #ff4444);
+    color: #fff;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
 .user-actions {
     display: flex;
     gap: 10px;

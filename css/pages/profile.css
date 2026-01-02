@@ -5,11 +5,59 @@
     font-family: Arial, sans-serif;
 }
 
+.profile-dashboard {
+    margin-top: 30px;
+}
+
+/* Tabs - similar cu admin/doctor dashboard */
+.admin-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-btn {
+    padding: 12px 25px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background: #e8e8e8;
+    color: #333;
+}
+
+.tab-btn.active {
+    background: #d82323;
+    color: #fff;
+}
+
+.dashboard-content {
+    min-height: 400px;
+}
+
+.tab-content {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .page-title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     color: #1f2b3d;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .profile-box {
@@ -66,6 +114,76 @@
     padding: 4px 12px;
     border-radius: 15px;
     display: inline-block;
+}
+
+.user-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.user-type-badge {
+    color: #666;
+    font-size: 13px;
+    text-transform: capitalize;
+    background: #f5f5f5;
+    padding: 4px 12px;
+    border-radius: 15px;
+}
+
+.user-specialty-badge {
+    color: #fff;
+    font-size: 13px;
+    background: linear-gradient(135deg, #d82323, #ff4444);
+    padding: 4px 14px;
+    border-radius: 15px;
+    font-weight: 600;
+}
+
+.doctor-rating-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.doctor-rating-display .stars {
+    color: #ffc107;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.doctor-rating-display.no-rating .stars {
+    color: #ddd;
+}
+
+.doctor-rating-display .rating-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2b3d;
+}
+
+.doctor-rating-display .rating-count {
+    font-size: 13px;
+    color: #999;
+}
+
+.user-specialty {
+    margin: 8px 0 0 0;
+    color: #fff;
+    font-size: 13px;
+    background: linear-gradient(135deg, #d82323, #ff4444);
+    padding: 5px 14px;
+    border-radius: 15px;
+    display: inline-block;
+    font-weight: 600;
+}
+
+.professional-section {
+    grid-column: 1 / -1;
+    border-left-color: #d82323;
+    background: linear-gradient(135deg, #fff5f5, #fff);
 }
 
 .profile-details {
@@ -158,4 +276,461 @@
 
 .btn-grey:hover {
     background: #d0d0d0;
+}
+
+/* ================================
+   CONSULTATIONS SECTION
+   ================================ */
+
+.consultations-section {
+    margin-top: 40px;
+}
+
+.section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-header-row h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f2b3d;
+    margin: 0;
+}
+
+.btn-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-link:hover {
+    border-color: #d82323;
+    color: #d82323;
+}
+
+.consultations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.consultation-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+}
+
+.consultation-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.consultation-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.doctor-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d82323, #ff4444);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.doctor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.doctor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.doctor-info h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2b3d;
+    margin: 0;
+}
+
+.doctor-specialty {
+    font-size: 13px;
+    color: #d82323;
+    font-weight: 500;
+}
+
+.card-menu-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.card-menu-btn:hover {
+    color: #333;
+}
+
+.card-details {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 5px;
+}
+
+.detail-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.consultation-card .detail-col .detail-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 5px;
+    line-height: 1;
+    flex: none;
+    padding: 0;
+}
+
+.consultation-card .detail-col .detail-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2b3d;
+    background: none;
+    padding: 0;
+    margin: 0;
+    line-height: 1.2;
+    flex: none;
+}
+
+.card-diagnostic {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 0;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    flex-grow: 1;
+}
+
+.card-diagnostic .detail-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+    text-transform: none;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.card-diagnostic .detail-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2b3d;
+    background: none;
+    padding: 0;
+    line-height: 1.2;
+}
+
+/* Rating System */
+.card-rating {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.card-rating .detail-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.rating-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 24px;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0 2px;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    color: #ffc107;
+}
+
+.rating-text {
+    font-size: 13px;
+    color: #666;
+    font-weight: 600;
+}
+
+.btn-view-details {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #d82323;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+    box-sizing: border-box;
+    margin-top: auto;
+}
+
+.btn-view-details:hover {
+    background: #c01f1f;
+}
+
+/* ================================
+   APPOINTMENTS TAB STYLES
+   ================================ */
+
+.appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.appointment-card-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: box-shadow 0.2s;
+}
+
+.appointment-card-horizontal:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.appointment-date-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #d82323, #ff4444);
+    border-radius: 10px;
+    color: #fff;
+    min-width: 80px;
+}
+
+.appointment-date-box .day-name {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.appointment-date-box .day-number {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.appointment-date-box .month-name {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.appointment-info {
+    flex: 1;
+}
+
+.appointment-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.appointment-info h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2b3d;
+    margin: 0 0 5px 0;
+}
+
+.appointment-info .specialty {
+    font-size: 13px;
+    color: #d82323;
+    margin: 0 0 5px 0;
+}
+
+.appointment-info .service {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.appointment-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.status-confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.status-completed {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.status-badge.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2b3d;
+    margin: 0 0 10px 0;
+}
+
+.empty-state p {
+    color: #666;
+    margin: 0 0 20px 0;
+}
+
+/* Card Attachments */
+.card-attachments {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.attachment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: #f0f9f0;
+    border: 1px solid #28a745;
+    border-radius: 6px;
+    color: #28a745;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.attachment-link:hover {
+    background: #28a745;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .consultations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-header-row {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .appointment-card-horizontal {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .appointment-date-box {
+        flex-direction: row;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .admin-tabs {
+        flex-wrap: wrap;
+    }
 }
